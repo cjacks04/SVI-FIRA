@@ -1,0 +1,218 @@
+---
+title: "SVI and vaccinations in Wisconsin"
+author: "Samantha Fabros Lee, Isha Padmanaban, Bria Thedore, and Corey Jackson"
+date: "`r Sys.time()`"
+output:
+  html_document:
+    fig_caption: yes
+    highlight: pygments
+    number_sections: yes
+    theme: spacelab
+    toc: yes
+    toc_float:
+      smooth_scroll: no
+  pdf_document:
+    toc: yes
+    toc_depth: '5'
+always_allow_html: yes
+editor_options: 
+  chunk_output_type: console
+---
+# Motivation
+
+## Research questions
+
+# Methodology
+
+# Analysis 
+
+```{r, setup, include=FALSE}
+library(readr) # For importing csv file
+library(stargazer) # Reporting tables
+
+# Import data set. This code chunk is where you should complete any data munging. You should import/clean data here, rename columns etc. Line 29 starts the code block and line 33 ends the code block. Notice on line 29 include=FALSE will hide code from the document that is rendered Knit the document.
+
+ 
+svi_data <- read_csv("/Users/samanthalee/Documents/research/svi_clean_output.csv")
+svi_data <- data.frame(svi_data)
+
+# You might want to clean column names so they're obvious. Try to maintain consistency.
+names(svi_data)[3:4] <- c("Total_Pop","Poverty_Pop")
+print(svi_data)
+# Extract census tract from location.
+svi_data$TRACT <- gsub('^.*Tract\\s*|\\s*,[a-zA-Z]*,.*$', '', svi_data$LOCATION)
+print(svi_data$TRACT)
+Tot_Pop <- svi_data$Total_Pop
+Poverty_Pop <- svi_data$Poverty_Pop
+print(Tot_Pop)
+```
+
+You can add text here. If you want to reference data in text you can do so by placing it between ticks. Our research project has `r 1+3` people. The output file will display the number 4. 
+
+```{r setup_analysis, include=FALSE}
+# Typically we want to report high-level analysis of the data to provide the reader a window into the data. You should report how many records are in the data field. You can also report high-level statistics e.g., a table of race/ethnicity groups. 
+
+len <- length(unique(svi_data$TRACT))
+print(len)
+
+
+# Create ggplot histograms for each population variable in svi_data. Add the figures in a matrix grid e.g., the code grid.arrange(p1, p2, nrow = 1) will place to figures named p1 and p2 side by side. Have 4 visualizations per row.
+#install.packages("ggplot")
+library(ggplot2)
+#install.packages("gridExtra")
+library(gridExtra)
+png(file = "histogram.png")
+p1 <- ggplot(svi_data, aes(Tot_Pop)) + 
+  geom_histogram() +
+  xlab("Total Population Overall") +
+  ylab("Count") +
+  ggtitle("Total Population vs. Count")
+
+
+
+p2 <- ggplot(svi_data, aes(Poverty_Pop)) + 
+  geom_histogram() +
+  xlab("Below Poverty as a Socioeconomic status") +
+  ylab("Count") +
+  ggtitle("Poverty Population vs. Count")
+
+Persons_aged_65_and_older <- svi_data$E_AGE65
+p3 <- ggplot(svi_data, aes(Persons_aged_65_and_older)) + 
+  geom_histogram() +
+  xlab("Household Composition for 65 or older") +
+  ylab("Count") +
+  ggtitle("Persons 65 or Older vs. Count")
+
+Persons_aged_17_and_younger <- svi_data$E_AGE17
+p4 <- ggplot(svi_data, aes(Persons_aged_17_and_younger)) + 
+  geom_histogram() +
+  xlab("Household Composition for 17 or younger") +
+  ylab("Count") +
+  ggtitle("Persons 17 or Younger vs. Count")
+PlotsList<- list(p1,p2,p3,p4)
+grid.arrange(grobs = PlotsList, ncol = 2)
+dev.off()
+
+
+png(file = "histogram1.png")
+Civilian_Noninstitutionalizes_with_Disability <- svi_data$E_DISABL
+p5 <- ggplot(svi_data, aes(Civilian_Noninstitutionalizes_with_Disability)) + 
+  geom_histogram() +
+  xlab("civilians ages 5&up w/ disability") +
+  ylab("Count") +
+  ggtitle("Ages 5&up w/ disability vs. Count")
+
+Single_parent_with_children_under_18 <- svi_data$E_SNGPNT
+p6 <- ggplot(svi_data, aes(Single_parent_with_children_under_18)) + 
+  geom_histogram() +
+  xlab("Single-Parent Households w/ 18&younger") +
+  ylab("Count") +
+  ggtitle("Single-Parent Households vs. Count")
+  
+
+Minority_except_white_non_Hispanic <- svi_data$E_MINRTY
+p7 <- ggplot(svi_data, aes(Minority_except_white_non_Hispanic)) + 
+  geom_histogram() +
+  xlab("Minority in Minority Status") +
+  ylab("Count") +
+  ggtitle("Minority vs. Count")
+
+Speak_English_less_than_well <- svi_data$E_LIMENG
+p8 <- ggplot(svi_data, aes(Speak_English_less_than_well)) + 
+  geom_histogram() +
+  xlab("Speaks English 'Less than Well'") +
+  ylab("Count") +
+  ggtitle("Minority Language vs. Count")
+PlotsList<- list(p1,p2,p3,p4)
+grid.arrange(grobs = PlotsList, ncol = 2)
+dev.off()
+
+
+png(file = "histogram2.png")
+Housing_10_or_more_units <- svi_data$E_MUNIT
+p9 <- ggplot(svi_data, aes(Housing_10_or_more_units)) + 
+  geom_histogram() +
+  xlab("Multi-Unit Structures") +
+  ylab("Count") +
+  ggtitle("Multi-Unit Structures vs. Count")
+
+Mobile_homes_estimate <- svi_data$E_MOBILE
+p10 <- ggplot(svi_data, aes(Mobile_homes_estimate)) + 
+  geom_histogram() +
+  xlab("Mobiles Homes estimate") +
+  ylab("Count") +
+  ggtitle("Mobiles Homes vs. Count")
+
+More_people_than_rooms <- svi_data$E_CROWD
+p11 <- ggplot(svi_data, aes(More_people_than_rooms)) + 
+  geom_histogram() +
+  xlab("Crowding within rooms") +
+  ylab("Count") +
+  ggtitle("Crowding vs. Count")
+
+Households_with_no_vehicle <- svi_data$E_NOVEH
+p12 <- ggplot(svi_data, aes(Households_with_no_vehicle)) + 
+  geom_histogram() +
+  xlab("Households without vehicles") +
+  ylab("Count") +
+  ggtitle("Transportation:no vehicle vs. Count")
+PlotsList<- list(p1,p2,p3,p4)
+grid.arrange(grobs = PlotsList, ncol = 2)
+dev.off()
+
+
+
+```
+
+In total, there are `r length(unique(svi_data$FIPS))` FIPS designations in the State of Wisconsin.
+
+```{r setup_analysis_report}
+ # Display figures here. For instance you can just write p1 to display the chart or use grid.arrange(p1, p2, nrow = 1)
+
+grid.arrange(p1,p2,p3,p4,nrow = 2)
+grid.arrange(p5,p6,p7,p8,nrow = 2)
+grid.arrange(p9,p10,p11,p12,nrow = 2)
+
+```
+
+## RQ1: What factors determine a FIPS area's socially vulnerable index score
+```{r, rq1, include=FALSE}
+# Here, you should conduct analyses for RQ1. The question appears to me to be a simple regression with the dependent variable RPL_Themes and independent variables all other attributes describing FIPS. 
+input <- svi_data[,c("RPL_THEMES", "RPL_THEME1", "RPL_THEME2", "RPL_THEME3", "RPL_THEME4")]
+model <- lm(RPL_THEMES~RPL_THEME1+RPL_THEME2+RPL_THEME3+RPL_THEME4, data = input)
+model1 <- lm(RPL_THEMES~Total_Pop+Poverty_Pop, data = svi_data)
+print(model1)
+print(model)
+RPL_THEMES_Coef <- coef(model)[1]
+print(RPL_THEMES_Coef)
+
+RPL_THEME1_Coef <- coef(model)[2]
+RPL_THEME2_Coef <- coef(model)[3]
+RPL_THEME3_Coef <- coef(model)[4]
+RPL_THEME4_Coef <- coef(model)[5]
+
+print(RPL_THEME1_Coef)
+print(RPL_THEME2_Coef)
+print(RPL_THEME3_Coef)
+print(RPL_THEME4_Coef)
+```
+
+```{r, rq1_report, results='asis'}
+# Report analyis for RQ1 here. Typical regression. Use the stargazer() function to report table. 
+stargazer(model1,type = "html")
+stargazer(model, type = "html")
+```
+
+[Add some synthesis of the regression results. What factor are significant predictors. What might this mean for vaccinations and where decision makers should place encouragement strategies??]
+
+Total Population did not significantly predicted social vulnerability (β = -0.00005,p<0.05)
+
+Poverty Population significantly predicted social vulnerability (β = 0.0004,p<0.05)
+
+Socioeconomic Status significantly predicted social vulnerability (β = 0.447,p<0.05)
+
+Household Composition and Disability significantly predicted social vulnerability (β = 0.272,p<0.05)
+
+Minority Status and Language significantly predicted social vulnerability (β = 0.231,p<0.05)
+
+Housing Type and Transportation significantly predicted social vulnerability (β = 0.338,p<0.05)
