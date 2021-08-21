@@ -1,0 +1,8 @@
+Run ShniyR/ui.R file to open the application, wait for approximately one minute for the options to load in the application. This is because the Immunization data is huge and it takes time when loaded.
+
+The path names for the files used in the application are to be checked if the files are to be moved to another folder.
+
+Files needed:
+R files : ct_analysis, county_analysis, ct_analysis_scatter, county_analysis_scatter  
+ShinyR files : ui.R, server.R
+Data files: Wisconsin.csv, Wisconsin_COUNTY.csv, WI_County_Code.csv, encouragement.csv, Immunization data
