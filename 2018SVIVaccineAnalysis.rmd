@@ -25,12 +25,14 @@ this is my research question.
 
 Nice work here. 
 # Methodology
+Move something here
 
 # Analysis 
 
 ```{r, setup, include=FALSE}
 library(readr) # For importing csv file
 library(stargazer) # Reporting tables
+library(package)
 
 # Import data set. This code chunk is where you should complete any data munging. You should import/clean data here, rename columns etc. Line 29 starts the code block and line 33 ends the code block. Notice on line 29 include=FALSE will hide code from the document that is rendered Knit the document.
 
